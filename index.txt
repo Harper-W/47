@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语单词学习卡片</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            width: 100%;
+            max-width: 800px;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+        }
+        .card-content {
+            padding: 25px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .english {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2575fc;
+            margin-bottom: 15px;
+        }
+        .chinese {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            min-height: 60px;
+        }
+        .emoji {
+            font-size: 32px;
+            margin-top: 10px;
+        }
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .audio-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .audio-btn:hover {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            transform: scale(1.05);
+        }
+        .theme-selector {
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .theme-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .theme-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .search-box {
+            margin: 20px 0;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            padding-left: 50px;
+        }
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a11cb;
+            font-size: 20px;
+        }
+        .instructions {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .instructions h2 {
+            margin-bottom: 15px;
+            color: #2575fc;
+        }
+        .instructions p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        @media (max-width: 768px) {
+            .card-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            .english {
+                font-size: 28px;
+            }
+            .chinese {
+                font-size: 20px;
+            }
+        }
+        .footer {
+            margin-top: 30px;
+            color: white;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>英语单词学习卡片</h1>
+        <p>点击发音按钮学习单词的正确读音</p>
+        <p>所有单词都添加了对应的表情符号，帮助记忆</p>
+    </div>
+    
+    <div class="container">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="搜索单词或中文意思...">
+        </div>
+        
+        <div class="theme-selector">
+            <button class="theme-btn active" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white;">默认主题</button>
+            <button class="theme-btn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);">柔和主题</button>
+            <button class="theme-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">蓝色主题</button>
+            <button class="theme-btn" style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);">淡蓝主题</button>
+        </div>
+        
+        <div class="card-container" id="cardContainer">
+            <!-- 卡片将由JavaScript生成 -->
+        </div>
+        
+        <div class="instructions">
+            <h2>使用说明</h2>
+            <p><i class="fas fa-volume-up"></i> 点击"英文发音"或"中文发音"按钮可以听到单词发音</p>
+            <p><i class="fas fa-search"></i> 使用上方搜索框可以过滤卡片内容</p>
+            <p><i class="fas fa-palette"></i> 选择不同的主题颜色改变页面风格</p>
+            <p><i class="fas fa-mouse-pointer"></i> 将鼠标悬停在卡片上可以看到浮动效果</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>单词学习卡片系统 &copy; 2023 | 设计用于英语学习</p>
+    </div>
+
+    <script>
+        const wordCards = [
+            { en: "rope", cn: "绳子", emoji: "🪢", enAudio: "assets/audio/words/rope.mp3", cnAudio: "assets/audio/words/shengzi.mp3" },
+            { en: "cube", cn: "立方体", emoji: "🧊", enAudio: "assets/audio/words/cube.mp3", cnAudio: "assets/audio/words/lifangti.mp3" },
+            { en: "bone", cn: "骨头", emoji: "🦴", enAudio: "assets/audio/words/bone.mp3", cnAudio: "assets/audio/words/gutou.mp3" },
+            { en: "cute", cn: "可爱的", emoji: "😊", enAudio: "assets/audio/words/cute.mp3", cnAudio: "assets/audio/words/keaide.mp3" },
+            { en: "note", cn: "便签（笔记）", emoji: "📝", enAudio: "assets/audio/words/note.mp3", cnAudio: "assets/audio/words/bianqian.mp3" },
+            { en: "mute", cn: "消音（减音）", emoji: "🔇", enAudio: "assets/audio/words/mute.mp3", cnAudio: "assets/audio/words/xiaoyin.mp3" },
+            { en: "spring", cn: "春天", emoji: "🌸", enAudio: "assets/audio/words/spring.mp3", cnAudio: "assets/audio/words/chuntian.mp3" },
+            { en: "winter", cn: "冬天", emoji: "❄️", enAudio: "assets/audio/words/winter.mp3", cnAudio: "assets/audio/words/dongtian.mp3" },
+            { en: "summer", cn: "夏天", emoji: "☀️", enAudio: "assets/audio/words/summer.mp3", cnAudio: "assets/audio/words/xiatian.mp3" },
+            { en: "warm", cn: "温暖的", emoji: "🔥", enAudio: "assets/audio/words/warm.mp3", cnAudio: "assets/audio/words/wennuan.mp3" },
+            { en: "cool", cn: "凉爽的", emoji: "🍃", enAudio: "assets/audio/words/cool.mp3", cnAudio: "assets/audio/words/liangshuang.mp3" },
+            { en: "fall", cn: "秋天", emoji: "🍂", enAudio: "assets/audio/words/fall.mp3", cnAudio: "assets/audio/words/qiutian.mp3" }
+        ];
+
+        const cardContainer = document.getElementById('cardContainer');
+        const searchInput = document.getElementById('searchInput');
+        const themeButtons = document.querySelectorAll('.theme-btn');
+        
+        // 生成卡片
+        function renderCards(cards) {
+            cardContainer.innerHTML = '';
+            
+            if (cards.length === 0) {
+                cardContainer.innerHTML = `
+                    <div class="no-results">
+                        <p>没有找到匹配的单词</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            cards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                
+                cardElement.innerHTML = `
+                    <div class="card-content">
+                        <div>
+                            <div class="english">${card.en}</div>
+                            <div class="chinese">${card.cn}</div>
+                            <div class="emoji">${card.emoji}</div>
+                        </div>
+                        <div class="audio-controls">
+                            <button class="audio-btn" onclick="playAudio('${card.en}', 'en')">
+                                <i class="fas fa-volume-up"></i> 英文发音
+                            </button>
+                            <button class="audio-btn" onclick="playAudio('${card.cn}', 'zh')">
+                                <i class="fas fa-volume-up"></i> 中文发音
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                cardContainer.appendChild(cardElement);
+            });
+        }
+        
+        // 初始渲染
+        renderCards(wordCards);
+        
+        // 搜索功能
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredCards = wordCards.filter(card => 
+                card.en.toLowerCase().includes(searchTerm) || 
+                card.cn.toLowerCase().includes(searchTerm) ||
+                card.emoji.includes(searchTerm)
+            );
+            renderCards(filteredCards);
+        });
+        
+        // 主题切换
+        themeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // 移除所有按钮的active类
+                themeButtons.forEach(btn => btn.classList.remove('active'));
+                // 为当前点击的按钮添加active类
+                button.classList.add('active');
+                
+                // 根据按钮文本更改背景
+                const themeText = button.textContent;
+                if (themeText === '默认主题') {
+                    document.body.style.background = 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)';
+                } else if (themeText === '柔和主题') {
+                    document.body.style.background = 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)';
+                } else if (themeText === '蓝色主题') {
+                    document.body.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+                } else if (themeText === '淡蓝主题') {
+                    document.body.style.background = 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)';
+                }
+            });
+        });
+        
+        // 使用浏览器语音合成API播放发音
+        function playAudio(text, lang) {
+            if ('speechSynthesis' in window) {
+                const speech = new SpeechSynthesisUtterance();
+                speech.lang = lang === 'en' ? 'en-US' : 'zh-CN';
+                speech.text = text;
+                speech.volume = 1;
+                speech.rate = 0.8;
+                speech.pitch = 1;
+                
+                window.speechSynthesis.cancel(); // 取消之前可能未完成的语音
+                window.speechSynthesis.speak(speech);
+            } else {
+                alert('您的浏览器不支持语音合成API');
+            }
+        }
+    </script>
+</body>
+</html>
